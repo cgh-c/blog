@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: blog-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - APP_ENV=production
+      - DB_PATH=/app/data/blog.db
+      - UPLOAD_DIR=/app/uploads
+    volumes:
+      - blog-data:/app/data
+      - blog-uploads:/app/uploads
+    expose:
+      - "8080"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: blog-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  blog-data:
+  blog-uploads:
