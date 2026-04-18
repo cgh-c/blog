@@ -38,7 +38,7 @@ func Setup(cfg *config.Config, db *gorm.DB) *gin.Engine {
 
 	// JWT manager
 	jwtMgr := auth.NewJWTManager(cfg.JWTSecret, cfg.JWTExpiry, cfg.JWTExpiry/4)
-	secureCookie := cfg.IsProduction()
+	secureCookie := cfg.SecureCookie
 
 	// Rate limiter for auth endpoints: 5 requests per minute
 	authLimiter := ratelimit.NewIPRateLimiter(rate.Every(12*time.Second), 5)

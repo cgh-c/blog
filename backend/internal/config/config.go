@@ -21,7 +21,8 @@ type Config struct {
 	UploadDir     string
 	UploadMaxSize int64
 
-	CORSOrigins []string
+	CORSOrigins    []string
+	SecureCookie   bool
 }
 
 // Load reads configuration from environment variables with sensible defaults.
@@ -41,7 +42,8 @@ func Load() *Config {
 		UploadDir:     getEnv("UPLOAD_DIR", "./uploads"),
 		UploadMaxSize: 5 * 1024 * 1024, // 5MB
 
-		CORSOrigins: splitComma(getEnv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5174")),
+		CORSOrigins:  splitComma(getEnv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5174")),
+		SecureCookie: getEnv("SECURE_COOKIE", "false") == "true",
 	}
 
 	return cfg
