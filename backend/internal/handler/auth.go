@@ -39,7 +39,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	user, err := h.authService.Login(req.Username, req.Password)
 	if err != nil {
-		response.Unauthorized(c, "invalid username or password")
+		response.Unauthorized(c, "用户名或密码错误")
 		return
 	}
 

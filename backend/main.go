@@ -21,6 +21,7 @@ func main() {
 	// Seed initial admin user and default settings
 	database.SeedAdmin(db, cfg.AdminUsername, cfg.AdminPassword)
 	database.SeedSettings(db)
+	database.SeedSampleData(db)
 
 	// Create upload directory
 	os.MkdirAll(cfg.UploadDir, 0755)

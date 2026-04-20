@@ -10,9 +10,11 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res.data,
   (err) => {
-    const message = err.response?.data?.message || 'Network error'
-    if (err.response?.status === 401) {
-      window.location.href = '/login'
+    const message = err.response?.data?.message || '网络错误'
+    const url = err.config?.url || ''
+    // Login endpoint 401 means wrong credentials — show error, don't redirect
+    if (err.response?.status === 401 && !url.includes('/auth/login')) {
+      window.location.href = '/admin/login'
     } else {
       ElMessage.error(message)
     }

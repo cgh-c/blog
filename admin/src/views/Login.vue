@@ -13,7 +13,7 @@ const loading = ref(false)
 
 async function handleLogin() {
   if (!form.value.username || !form.value.password) {
-    ElMessage.warning('Please enter username and password')
+    ElMessage.warning('请输入用户名和密码')
     return
   }
 
@@ -23,7 +23,7 @@ async function handleLogin() {
     auth.setAuth({ username: res.data.username })
     router.push('/')
   } catch {
-    // Error already handled by interceptor
+    // Error message shown by interceptor
   } finally {
     loading.value = false
   }
