@@ -99,23 +99,27 @@ func SeedSettings(db *gorm.DB) {
 }
 
 // SeedSampleData creates sample categories, tags, and articles for demonstration.
+// It skips any data that already exists (by slug), so it's safe to run on a DB with existing content.
 func SeedSampleData(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Article{}).Count(&count)
-	if count > 0 {
-		return
-	}
-
-	// Categories
-	categories := []model.Category{
+	// Categories — insert only if slug doesn't exist
+	categoryDefs := []model.Category{
 		{Name: "技术笔记", Slug: "tech-notes", Description: "编程学习与技术分享", SortOrder: 1},
 		{Name: "项目实战", Slug: "projects", Description: "实际项目开发经验总结", SortOrder: 2},
 		{Name: "随笔思考", Slug: "thoughts", Description: "生活感悟与思考记录", SortOrder: 3},
 	}
-	db.Create(&categories)
+	var categories []model.Category
+	for _, c := range categoryDefs {
+		var existing model.Category
+		if db.Where("slug = ?", c.Slug).First(&existing).Error == nil {
+			categories = append(categories, existing)
+		} else {
+			db.Create(&c)
+			categories = append(categories, c)
+		}
+	}
 
-	// Tags
-	tags := []model.Tag{
+	// Tags — insert only if slug doesn't exist
+	tagDefs := []model.Tag{
 		{Name: "Go", Slug: "go"},
 		{Name: "Vue", Slug: "vue"},
 		{Name: "Docker", Slug: "docker"},
@@ -124,7 +128,16 @@ func SeedSampleData(db *gorm.DB) {
 		{Name: "后端", Slug: "backend"},
 		{Name: "入门教程", Slug: "tutorial"},
 	}
-	db.Create(&tags)
+	var tags []model.Tag
+	for _, t := range tagDefs {
+		var existing model.Tag
+		if db.Where("slug = ?", t.Slug).First(&existing).Error == nil {
+			tags = append(tags, existing)
+		} else {
+			db.Create(&t)
+			tags = append(tags, t)
+		}
+	}
 
 	now := time.Now()
 
@@ -607,14 +620,24 @@ SQLite + GORM 的组合非常适合个人项目，简单高效。当项目规模
 		},
 	}
 
+	created := 0
 	for _, item := range articles {
+		var existing model.Article
+		if db.Where("slug = ?", item.article.Slug).First(&existing).Error == nil {
+			continue // already exists, skip
+		}
 		db.Create(&item.article)
 		if len(item.tagIDs) > 0 {
 			var articleTags []model.Tag
 			db.Where("id IN ?", item.tagIDs).Find(&articleTags)
 			db.Model(&item.article).Association("Tags").Replace(articleTags)
 		}
+		created++
 	}
 
-	log.Printf("Sample data seeded: %d categories, %d tags, %d articles", len(categories), len(tags), len(articles))
+	if created > 0 {
+		log.Printf("Sample data seeded: %d new articles added", created)
+	} else {
+		log.Println("Sample data: all articles already exist, nothing to add")
+	}
 }

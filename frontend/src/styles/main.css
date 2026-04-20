@@ -579,6 +579,42 @@ a:hover {
   opacity: 0;
 }
 
+/* Page header (Category / Tag pages) */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.back-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.page-info {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
 /* Welcome Page */
 .welcome-page {
   min-height: 100vh;

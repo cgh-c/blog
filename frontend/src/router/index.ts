@@ -22,6 +22,11 @@ const routes = [
     component: () => import('../views/Category.vue'),
   },
   {
+    path: '/tag/:slug',
+    name: 'Tag',
+    component: () => import('../views/Tag.vue'),
+  },
+  {
     path: '/archive',
     name: 'Archive',
     component: () => import('../views/Archive.vue'),
