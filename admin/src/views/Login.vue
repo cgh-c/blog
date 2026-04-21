@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { login } from '../api'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage } from 'element-plus'
+import { User, Lock } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -38,14 +39,14 @@ async function handleLogin() {
       </template>
       <el-form @submit.prevent="handleLogin">
         <el-form-item>
-          <el-input v-model="form.username" placeholder="Username" prefix-icon="User" size="large" />
+          <el-input v-model="form.username" placeholder="Username" :prefix-icon="User" size="large" />
         </el-form-item>
         <el-form-item>
           <el-input
             v-model="form.password"
             type="password"
             placeholder="Password"
-            prefix-icon="Lock"
+            :prefix-icon="Lock"
             size="large"
             show-password
           />
